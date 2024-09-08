@@ -1,32 +1,18 @@
 import cv2
-# Numpy for array related functions
 import numpy as np
-# Dlib for deep learning based Modules and face landmark detection
 import dlib
-#face_utils for basic operations of conversion
 from imutils import face_utils
 from pygame import mixer
 import time
-
-import numpy as np
-import cv2
-from tkinter import *
+from tkinter import*
 from scipy.spatial import distance as distance
 
 root = Tk()
 root.title(" Driver Drowsiness ")
-root.configure(background="lightblue")
+root.configure(background="lightgreen")
 
-#Initializing the camera and taking the instance
-
-
-#Initializing the face detector and landmark detector
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(r"C:\Users\LENOVO\Downloads\Driver_Drowsisness\shape_predictor_68_face_landmarks.dat")
-
-#status marking for current state
-
-
+predictor = dlib.shape_predictor(r"C:\Users\LENOVO\Documents\projects\Driver_Drowsisness\Driver_Drowsisness\shape_predictor_68_face_landmarks.dat")
 
 
 def compute(ptA,ptB):
@@ -38,7 +24,7 @@ def blinked(a,b,c,d,e,f):
 	down = compute(a,f)
 	ratio = up/(2.0*down)
 
-	#Checking if it is blinked
+	
 	if(ratio>0.25):
 		return 2
 	elif(ratio>0.21 and ratio<=0.25):
@@ -47,7 +33,7 @@ def blinked(a,b,c,d,e,f):
 		return 0
 
 def main():
-	cap = cv2.VideoCapture(r"C:\Users\LENOVO\Pictures\Camera Roll")
+	cap = cv2.VideoCapture("C:/Users/LENOVO/Pictures/Camera Roll/video.mp4")
 	sleep = 0
 	drowsy = 0
 	active = 0
@@ -73,13 +59,11 @@ def main():
 			landmarks = predictor(gray, face)
 			landmarks = face_utils.shape_to_np(landmarks)
 
-			#The numbers are actually the landmarks which will show eye
 			left_blink = blinked(landmarks[36],landmarks[37], 
 				landmarks[38], landmarks[41], landmarks[40], landmarks[39])
 			right_blink = blinked(landmarks[42],landmarks[43], 
 				landmarks[44], landmarks[47], landmarks[46], landmarks[45])
 			
-			#Now judge what to do for the eye blinks
 			if(left_blink==0 or right_blink==0):
 				sleep+=1
 				drowsy=0
@@ -89,8 +73,8 @@ def main():
 						status="SLEEPING !!!"
 						color = (255,0,0)
 						mixer.init()
-						mixer.music.load(r"C:\Users\LENOVO\Downloads\Driver_Drowsisness\sound\warning.mpeg")
-						cv2.imwrite("dataset/frame_yawn%d.jpg"% sleep, frame)
+						mixer.music.load("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/warning.mpeg")
+						cv2.imwrite("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/dataset/frame_yawn%d.jpg"% sleep, frame)
 						mixer.music.play()
 						while mixer.music.get_busy():  # wait for music to finish playing
 							time.sleep(1)
@@ -103,7 +87,7 @@ def main():
 						status="Drowsy !"
 						color = (0,0,255)
 						mixer.init()
-						mixer.music.load(r"C:\Users\LENOVO\Downloads\Driver_Drowsisness\sound\warning_yawn.mpeg")
+						mixer.music.load("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/warning_yawn.mpeg")
 						mixer.music.play()
 						while mixer.music.get_busy():  # wait for music to finish playing
 							time.sleep(1)
@@ -176,8 +160,8 @@ def camera():
 						status="SLEEPING !!!"
 						color = (255,0,0)
 						mixer.init()
-						mixer.music.load(r"C:\Users\LENOVO\Downloads\Driver_Drowsisness\sound\warning.mpeg")
-						cv2.imwrite("dataset/frame_yawn%d.jpg"% sleep, frame)
+						mixer.music.load("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/warning.mpeg")
+						cv2.imwrite("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/dataset/frame_yawn%d.jpg"% sleep, frame)
 						mixer.music.play()
 						while mixer.music.get_busy():  # wait for music to finish playing
 							time.sleep(1)
@@ -189,7 +173,7 @@ def camera():
 						status="Drowsy !"
 						color = (0,0,255)
 						mixer.init()
-						mixer.music.load(r"C:\Users\LENOVO\Downloads\Driver_Drowsisness\sound\warning_yawn.mpeg")
+						mixer.music.load("C:/Users/LENOVO/Documents/projects/Driver_Drowsisness/Driver_Drowsisness/sound/warning_yawn.mpeg")
 						mixer.music.play()
 						while mixer.music.get_busy():  # wait for music to finish playing
 							time.sleep(1)
@@ -220,39 +204,46 @@ def camera():
 			break
 
 
-w2 = Label(root,justify=LEFT, text=" Driver Drowsiness Detection using Machine learning ")
+
+        
+        
+w2 = Label(root,justify=LEFT, text=" Driver Drowsiness Detection Using Deep Learning")
+w2.config(font=("Elephant", 30),background="lightyellow")
+w2.grid(row=0, column=0, columnspan=2, padx=100,pady=30)
+
+w2 = Label(root,justify=LEFT, text="System can detect driver drowsiness and prevent accidents.")
 w2.config(font=("Elephant", 30),background="lightblue")
-w2.grid(row=1, column=0, columnspan=2, padx=100,pady=40)
+w2.grid(row=3, column=0, columnspan=2, padx=100,pady=40)
 
 NameLb1 = Label(root, text="Please Select the Options  ")
-NameLb1.config(font=("Elephant", 12),background="lightblue")
-NameLb1.grid(row=5, column=0, pady=10)
+NameLb1.config(font=("Elephant", 15),background="lightgreen")
+NameLb1.grid(row=5, column=0,columnspan=2, pady=10)
 
-S1Lb = Label(root,  text="Video")
+S1Lb = Label(root,  text=" Recorded Video")
 S1Lb.config(font=("Elephant", 14))
 S1Lb.grid(row=7, column=0, pady=10 )
 
 S2Lb = Label(root,  text="Use Camera")
 S2Lb.config(font=("Elephant", 14))
-S2Lb.grid(row=8, column=0,pady=10)
+S2Lb.grid(row=7, column=1,pady=10)
 
-lr = Button(root, text="Video",height=2, width=10, command=main)
-lr.config(font=("Elephant", 12),background="green")
+lr = Button(root, text="Video",height=2, width=12, command=main)
+lr.config(font=("Elephant", 12),background="red")
 lr.grid(row=15, column=0,pady=20)
 lr = Button(root, text="Camera",height=2, width=10, command=camera)
-lr.config(font=("Elephant", 12),background="green")
-lr.grid(row=16, column=0,pady=20)
+lr.config(font=("Elephant", 12),background="red")
+lr.grid(row=15, column=1,pady=20)
 
-NameLb = Label(root, text="Predict using:")
-NameLb.config(font=("Elephant", 15),background="lightblue")
-NameLb.grid(row=13, column=0, pady=20)
 
 t3 = Text(root, height=2, width=15)
 t3.config(font=("Elephant", 15))
-t3.grid(row=15, column=1 ,padx=60)
+t3.grid(row=16, column=0 ,padx=60)
 t4 = Text(root, height=2, width=15)
 t4.config(font=("Elephant", 15))
 t4.grid(row=16, column=1 ,padx=60)
 
-root.mainloop()
+w2 = Label(root,justify=LEFT, text="Stay safe on the road.")
+w2.config(font=("Elephant", 30),background="lightpink")
+w2.grid(row=18, column=0, columnspan=2, padx=100,pady=40)
 
+root.mainloop()
